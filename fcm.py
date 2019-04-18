@@ -70,7 +70,19 @@ def euclidean_distance(p, q):
 
 
 def update_membership_matrix(dataset, clusters, m):
-    raise NotImplementedError
+    membership_matrix = []
+    fuzzy_power = float(2 / (m-1))
+    n = len(dataset)
+    c = len(clusters[0])
+    for i in range(n):
+        denom = sum([(1/euclidean_distance(dataset[i],clusters[x])) ** fuzzy_power for x in range(c)])
+        membership = []
+        for j in range(c):
+            num = (1/euclidean_distance(dataset[i],clusters[j])) ** fuzzy_power
+            membership.append(num/denom)
+        membership_matrix.append(membership)
+    return membership_matrix
+
 
 
 c = 2
@@ -87,3 +99,6 @@ print_dataset(membership)
 cc = update_cluster_centers(dataset, membership,m)
 print("cluster centers:")
 print_dataset(cc)
+mm = update_membership_matrix(dataset, cc,m)
+print("new membership:")
+print_dataset(mm)
